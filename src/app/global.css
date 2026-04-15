@@ -1,0 +1,7 @@
+/*
+v3 에서는 이렇게 3줄 -> v4 에서 한줄로 통합
+@tailwind base;
+@tailwind _components;
+@tailwind utilities;
+*/
+@import "tailwindcss";

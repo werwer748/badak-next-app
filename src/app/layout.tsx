@@ -5,6 +5,7 @@
   페이지가 바뀌어도 layout은 다시 렌더링되지 않아요. 이게 Pages Router랑 결정적으로 다른 점이에요.
 */
 import type { Metadata } from 'next';
+import './global.css';
 
 export const metadata: Metadata = {
   title: 'Badak Next App',

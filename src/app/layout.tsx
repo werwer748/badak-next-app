@@ -6,17 +6,28 @@
 */
 import type { Metadata } from 'next';
 import './global.css';
+import QueryProvider from "@/providers/QueryProvider";
 
 export const metadata: Metadata = {
-  title: 'Badak Next App',
+  title: {
+    default: 'Badak Next App',
+    template: '%s | Badak Next App',
+  },
   description: '바닥부터 만들어보는 Next 프로젝트'
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode,
+  modal: React.ReactNode,
+}) {
   return (
     <html lang="ko">
       <body>
-        {children}
+        <QueryProvider>
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );

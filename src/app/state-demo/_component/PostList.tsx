@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { useModalStore } from '@/store/useModalStore'
+import { Badge } from "@/components/ui/Badge";
 
 type Post = {
   id: number
@@ -24,7 +25,10 @@ export default function PostList() {
     <div>
       <div className="flex items-center gap-4 mb-4">
         <span className="text-sm text-gray-500">
-          {isFetching ? '백그라운드 업데이트 중...' : '최신 데이터'}
+          {isFetching
+            ? <Badge variant="warning">업데이트 중</Badge>
+            : <Badge variant="success">최신 데이터</Badge>
+          }
         </span>
       </div>
       <ul className="space-y-3">

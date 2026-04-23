@@ -2,6 +2,9 @@ import { dehydrate, HydrationBoundary, QueryClient, useQuery, useQueryClient } f
 import Link from "next/link";
 import PostList from "@/app/state-demo/_component/PostList";
 import Modal from "@/app/state-demo/_component/Modal";
+import PostForm   from "@/app/state-demo/_component/PostForm";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 
 type TPost = {
   id: number
@@ -26,11 +29,17 @@ export default async function StateDemoPage() {
       <p className="text-gray-600 mb-6">
         Zustand + TanStack Query 조합이에요.
       </p>
-      <Link href="/blog" className="text-blue-500 hover:underline mb-6 block">
-        블로그로 이동 →
-      </Link>
+      <Badge variant="success">신선한 데이터</Badge>
+      <Badge variant="warning">업데이트 중</Badge>
+      <Badge variant="danger">에러</Badge>
+      <Badge variant="outline">기본</Badge>
+
+      <Button variant="default">블로그로 이동</Button>
+      <Button variant="outline">아웃라인 버튼</Button>
+      <Button variant="destructive">삭제</Button>
       <h2 className="text-xl font-bold mb-4">포스트 목록</h2>
       <HydrationBoundary state={dehydrate(queryClient)}>
+        <PostForm />
         <PostList />
       </HydrationBoundary>
       <Modal />

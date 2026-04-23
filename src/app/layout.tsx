@@ -7,6 +7,10 @@
 import type { Metadata } from 'next';
 import './global.css';
 import QueryProvider from "@/providers/QueryProvider";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: {
@@ -23,7 +27,7 @@ export default function RootLayout({
   modal: React.ReactNode,
 }) {
   return (
-    <html lang="ko">
+    <html lang="ko" className={cn("font-sans", geist.variable)}>
       <body>
         <QueryProvider>
           {children}

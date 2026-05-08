@@ -1,5 +1,17 @@
 import { NextRequest } from 'next/server';
 
+/*
+// route.ts에 캐시 추가하는 방법 //
+// 캐시 안 함 (기본값) - 매 요청마다 실행
+export const dynamic = 'force-dynamic'
+
+// 빌드 타임에 정적으로 캐시
+export const dynamic = 'force-static'
+
+// 60초마다 캐시 갱신
+export const revalidate = 60
+*/
+
 const posts = [
   {
     id: 1,

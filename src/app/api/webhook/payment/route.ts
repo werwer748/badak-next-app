@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   revalidatePath(`/orders/${body.orderId}`); // 특정 주문 페이지 캐시 무효화
 
   // 3. revalidateTag → 태그로 묶인 캐시를 날림
-  revalidateTag('orders');             // 'orders' 태그 달린 캐시 전부 무효화
+  revalidateTag('orders', {});             // 'orders' 태그 달린 캐시 전부 무효화
 
   return Response.json({ok: true});
 }

@@ -31,6 +31,10 @@ src/app/
       [id]/
     webhook/
       payment/
+  robots.ts
+  sitemap.ts
+  _components/
+    Counter.tsx
 ```
 
 ---
@@ -41,6 +45,11 @@ src/app/
 - **경로** `src/app/page.tsx`
 - **학습 목적** Server Component 기본 구조 이해
 - **핵심 개념** `page.tsx` 가 곧 라우트, Server Component 기본값, 소스 보기에서 HTML 확인
+
+### Counter (테스트용 컴포넌트)
+- **경로** `src/app/_components/Counter.tsx`
+- **학습 목적** Client Component 기본 (`useState`, `useEffect`) + 테스트 대상
+- **핵심 개념** `'use client'` 선언, `setInterval` 로 매초 갱신되는 시각 표시, `Counter.test.tsx` 에서 렌더링/클릭 테스트
 
 ---
 
@@ -54,7 +63,10 @@ src/app/
 ### `/dashboard`
 - **경로** `src/app/(dashboard)/dashboard/page.tsx`
 - **학습 목적** Route Group + Parallel Routes 조합
-- **핵심 개념** `(dashboard)` 그룹은 사이드바 있는 layout, `@analytics` / `@orders` 슬롯으로 독립적 렌더링
+- **핵심 개념**
+  - `(dashboard)/layout.tsx` 는 사이드바 UI 담당, `(dashboard)/dashboard/layout.tsx` 는 `@analytics` / `@orders` 슬롯을 그리드로 배치하는 별도 layout — 레이아웃이 두 겹으로 중첩됨
+  - `@analytics` 슬롯에는 `loading.tsx` 파일 컨벤션 적용 (자동 로딩 UI), `@orders` 슬롯은 수동 `<Suspense fallback>` 으로 감싸서 두 방식을 비교
+  - `layout.tsx` 안에서 `@analytics` 용 `<Suspense>` 는 실험 차 주석 처리해둔 상태 (loading.tsx만으로 로딩 처리되는지 확인용)
 
 ---
 
@@ -86,7 +98,10 @@ src/app/
 ### `/photos`
 - **경로** `src/app/photos/page.tsx`
 - **학습 목적** Parallel Routes + Intercepting Routes 조합
-- **핵심 개념** `@modal` 슬롯, `default.tsx` 역할
+- **핵심 개념**
+  - `photos/layout.tsx` 가 `children` + `modal` 슬롯을 함께 렌더링
+  - `@modal` 슬롯 매칭 안 될 때 `photos/@modal/default.tsx` 가 fallback (아무것도 안 그림)
+  - `photos/default.tsx` 는 `children` 슬롯의 fallback ("사진!!!" 텍스트로 동작 확인용)
 
 ### `/photos/[id]`
 - **경로** `src/app/photos/[id]/page.tsx`
@@ -125,6 +140,7 @@ src/app/
 - **학습 목적** Zustand + TanStack Query 조합 실습
 - **핵심 개념**
   - Zustand `useModalStore` 로 모달 전역 상태 관리
+  - `persist` 미들웨어(`createJSONStorage` + `partialize`)로 localStorage 영속화도 구현해봤으나, 현재는 주석 처리하고 순수 `create` 만 사용 중 (비교 실험 흔적)
   - TanStack Query `useQuery` / `useMutation` / `invalidateQueries`
   - Dehydration / Hydration 패턴 (서버 prefetch → 클라이언트 캐시 복원)
   - Optimistic Update (`onMutate` / `onError` rollback)
@@ -157,6 +173,34 @@ src/app/
 - **경로** `src/app/api/webhook/payment/route.ts`
 - **학습 목적** 웹훅 + revalidateTag 개념 이해
 - **핵심 개념** 외부 서비스 웹훅 수신, `revalidateTag` 로 캐시 무효화
+
+---
+
+## 🔍 SEO Metadata Files
+
+### `src/app/robots.ts`
+- **학습 목적** `MetadataRoute.Robots` 로 robots.txt 동적 생성
+- **핵심 개념** UA별 규칙 분기 (`*` 는 `/dashboard`, `/api/`, `/_next/` disallow, `GPTBot` 은 전체 disallow), `sitemap` 필드로 sitemap.xml 위치 명시
+
+### `src/app/sitemap.ts`
+- **학습 목적** `MetadataRoute.Sitemap` 으로 sitemap.xml 동적 생성
+- **핵심 개념** 정적 URL + `posts.map()` 으로 동적 URL 생성, `changeFrequency` / `priority` 설정, 실무에서는 DB에서 slug 조회해 매핑하는 패턴 주석으로 정리
+
+---
+
+## 🧪 테스트 (Jest + Testing Library)
+
+### 설정
+- **경로** `jest.config.ts`, `jest.setup.ts`
+- **학습 목적** Next.js 프로젝트에 Jest 붙이기
+- **핵심 개념** `next/jest.js` 의 `nextJest()` 헬퍼로 TS/JSX 변환 자동 설정, `testEnvironment: 'jsdom'`, `moduleNameMapper` 로 `@/` alias 매핑
+
+### 테스트 대상
+| 파일 | 테스트 대상 | 검증 내용 |
+|------|------------|-----------|
+| `src/app/_components/Counter.test.tsx` | `Counter.tsx` | 초기 렌더링 값, 클릭 시 상태 증가 (`user-event`) |
+| `src/store/useModalStore.test.ts` | `useModalStore.ts` | Zustand 스토어 단독 로직 (open/close 상태 변화) |
+| `src/app/state-demo/_component/PostList.test.tsx` | `PostList.tsx` | TanStack Query 붙은 컴포넌트 렌더링/동작 |
 
 ---
 
@@ -197,7 +241,9 @@ src/app/
 | `src/app/actions/posts.ts` | Server Actions 모음 |
 | `src/components/ui/button.tsx` | shadcn/ui Button |
 | `src/components/ui/Badge.tsx` | cva로 직접 만든 Badge |
-| `next.config.ts` | Next.js 설정 |
+| `next.config.ts` | Next.js 설정 (`reactStrictMode: true` — 이중 렌더링으로 Hydration 불일치 검증) |
 | `proxy.ts` | 요청 인터셉터 |
-| `jest.config.ts` | Jest 설정 |
+| `jest.config.ts` / `jest.setup.ts` | Jest 설정 |
 | `postcss.config.ts` | Tailwind CSS PostCSS 설정 |
+| `src/app/robots.ts` | robots.txt 동적 생성 |
+| `src/app/sitemap.ts` | sitemap.xml 동적 생성 |

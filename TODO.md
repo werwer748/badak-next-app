@@ -37,11 +37,20 @@
 
 > 3, 4번 작업 완료 후 첫 배포를 나가기 전에 아래 두 가지도 같이 체크. 대시보드 설정이라 직접 진행 필요.
 
-- [ ] Vercel 프로젝트 Settings → Git에서 fork PR 자동 배포 시 환경변수 노출 여부 확인 (필요시 fork PR 자동배포 끄기)
-- [ ] GitHub 저장소 Settings → Branches에서 `main` 브랜치 force-push 금지 설정
+- [x] GitHub 저장소 Settings → Rulesets에서 `main`(Include default branch) 대상 **Block force pushes** 설정 완료
+- [ ] Vercel 프로젝트 Settings → Git에서 fork PR 자동 배포 시 환경변수 노출 여부 확인 — 지금은 프로젝트에 환경변수가 아예 없어서 위험도 0, **실제 env var를 처음 추가하는 시점**에 다시 체크
+- [x] Vercel 계정 2FA(인증 앱) 설정 완료
+- [x] **첫 배포 완료** (Vercel + GitHub 연동, `main` 브랜치 기준 자동 배포) — 이후 `main` push마다 자동 재배포됨
 
-## 5. 각 데모 페이지 설명 배너
+## 5. 각 데모 페이지 설명 배너 (+ 노션 실제 기록 반영)
 
+> 노션 연동 후, 페이지마다 넣는 `whatIsIt`/`whereUsed` 설명을 지금까지 작성한 일반론이 아니라
+> 사용자가 실제로 학습하면서 노션에 기록해둔 내용을 다듬어서 반영. `study-routes.ts`의 `linkType: 'notion'`
+> 항목들(API Routes, 테스트, 설정)의 `href: '#'` placeholder도 이때 실제 노션 URL로 교체.
+
+- [ ] 노션 연결 확인 후, 각 카테고리별 사용자의 실제 노션 기록 내용 확인
+- [ ] `study-routes.ts`의 `description`/`whatIsIt`/`whereUsed`/`concepts`를 노션 기록 기반으로 다듬기 (일반론 → 실제 학습 과정/삽질 경험 반영)
+- [ ] `notion` linkType 항목들의 `href`를 실제 노션 페이지 URL로 교체
 - [ ] `src/components/StudyNote.tsx` 공용 컴포넌트 작성 (`study-routes.ts` 데이터 참조해서 렌더링)
 - [ ] 아래 페이지 상단에 배너 삽입
   - [ ] `/counter`

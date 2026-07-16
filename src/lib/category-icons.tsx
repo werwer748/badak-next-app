@@ -1,0 +1,33 @@
+import {
+  Route,
+  FolderTree,
+  Braces,
+  LayoutGrid,
+  Waves,
+  Server,
+  Boxes,
+  ShieldCheck,
+  AlertTriangle,
+  Webhook,
+  Search,
+  FlaskConical,
+  Settings,
+  type LucideIcon,
+} from 'lucide-react'
+import type { StudyCategory } from '@/data/study-routes'
+
+export const categoryIcons: Record<StudyCategory, LucideIcon> = {
+  '라우팅 기초': Route,
+  'Route Group': FolderTree,
+  '동적 라우팅': Braces,
+  'Parallel & Intercepting Routes': LayoutGrid,
+  'Streaming': Waves,
+  'Server Actions': Server,
+  '상태관리': Boxes,
+  '인증': ShieldCheck,
+  '에러 처리': AlertTriangle,
+  'API Routes': Webhook,
+  'SEO': Search,
+  '테스트': FlaskConical,
+  '설정': Settings,
+}

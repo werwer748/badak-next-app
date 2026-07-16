@@ -20,22 +20,22 @@
 
 ## 3. 랜딩 페이지
 
-> ⚠️ Counter 카드가 `/counter`를 가리키므로, 4번(Counter 이동)을 3번과 같이 진행해야 첫 배포 때 링크가 안 깨짐
-
-- [ ] `/` 페이지를 가이드 랜딩으로 교체
-- [ ] 카테고리별 카드 그리드 UI
-- [ ] 카드에 "데모 보기" / "노션에서 보기 ↗" 구분 배지
-- [ ] 에러 트리거 카드 추가 (`/blog/hello-world?error=true` → error.tsx, 존재하지 않는 경로 → not-found.tsx)
+- [x] `/` 페이지를 가이드 랜딩으로 교체 (`src/app/page.tsx`, 히어로 + 카테고리 앵커 네비 + 카드 그리드)
+- [x] 카테고리별 카드 그리드 UI (`src/components/StudyRouteCard.tsx`, `src/lib/category-icons.tsx`, 반응형 1/2/3열)
+- [x] 카드에 "데모 보기" / "체험하기" / "노션에서 보기 ↗" 구분 배지
+- [x] 에러 트리거 카드 추가 (`study-routes.ts`에 이미 trigger 항목으로 존재 — `/blog/hello-world?error=true`, 존재하지 않는 slug)
 
 ## 4. Counter 이동
 
-- [ ] `src/app/_components/Counter.tsx` (+ 테스트) → `src/app/counter/` 로 이동
-- [ ] import 경로 점검
-- [ ] `npm test` 통과 확인
+- [x] `src/app/_components/Counter.tsx` (+ 테스트) → `src/app/counter/_components/`로 이동, `src/app/counter/page.tsx` 신설
+- [x] import 경로 점검
+- [x] `npm test` 통과 확인 (PostList.test.tsx 1건은 이 작업과 무관한 기존 flaky 테스트로 확인 — 변경 전 코드에서도 동일하게 실패함)
+- [x] (보너스) `npm run build` 중 발견한 기존 버그 수정: `src/app/layout.tsx`의 `RootLayout` prop 타입에 실제로 없는 `modal: React.ReactNode`가 필수로 박혀있어 Next 16 typed routes 체크에서 빌드 자체가 실패하던 문제 — 타입에서 제거 (루트에는 `@modal` 슬롯이 없음, `photos/@modal`과 무관)
+- [x] `src/app/global.css`의 `--primary`/`--primary-foreground`/`--ring`/`--sidebar-primary`/`--sidebar-ring`을 DESIGN.md 스펙대로 녹색 계열로 교체
 
 ## 배포 전 확인 (Git/Vercel 설정) — 3, 4번과 함께 진행
 
-> 3, 4번 작업 완료 후 첫 배포를 나가기 전에 아래 두 가지도 같이 체크
+> 3, 4번 작업 완료 후 첫 배포를 나가기 전에 아래 두 가지도 같이 체크. 대시보드 설정이라 직접 진행 필요.
 
 - [ ] Vercel 프로젝트 Settings → Git에서 fork PR 자동 배포 시 환경변수 노출 여부 확인 (필요시 fork PR 자동배포 끄기)
 - [ ] GitHub 저장소 Settings → Branches에서 `main` 브랜치 force-push 금지 설정

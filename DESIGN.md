@@ -79,6 +79,13 @@
 2. **카드 그리드** — 위 반응형 규칙대로, `src/data/study-routes.ts`를 순회해 카테고리별로 묶어서 렌더링
 3. **카드 구성 요소** — 카테고리 아이콘, 제목, 학습 목적(`description`) 한 줄, "데모 보기" / "노션에서 보기 ↗" 구분 배지(`linkType`에 따라 `Badge` variant 다르게: `demo`/`trigger`는 `default`, `notion`은 `outline`)
 
+## 전역 네비게이션 요소
+
+- `src/app/layout.tsx`에 "홈으로" 버튼을 고정 배치 — 카드 클릭 후 데모/노션 페이지로 이동하면 브라우저 뒤로가기 말고는 랜딩으로 돌아올 방법이 없어서 추가
+- 화면 하단 중앙 고정(`fixed bottom-6 left-1/2 -translate-x-1/2`), 아이콘(`Home`, size-5) + 텍스트(`text-base`), `Badge`와 톤을 맞춘 pill 버튼(`border-border`/`bg-card`/`text-muted-foreground`, hover 시 `border-primary`/`text-primary`)
+- `z-40` — `/photos` 인터셉트 모달(`z-50`)보다 낮게 둬서 모달이 열려 있을 때는 자연스럽게 가려지도록 함
+- 버튼이 콘텐츠를 가리는 문제는 레이아웃에 패딩을 넣는 대신(일부 페이지가 `min-h-screen` + 중앙 정렬을 쓰고 있어 스크롤/정렬이 깨질 위험) `bottom-0` 고정 그라디언트 스크림(`h-24 bg-gradient-to-t from-background to-transparent`, `pointer-events-none`, `z-30`)으로 해결 — 레이아웃에는 전혀 영향 없이 시각적으로만 자연스럽게 페이드
+
 ## 디자인 원칙 (기존 페이지 손볼 때)
 
 - 카드/여백/타이포 계층만 정리하고, 각 라우트의 구조적 학습 포인트(Route Group 분리, Parallel/Intercepting Routes 등)는 절대 건드리지 않음 (`CLAUDE.md` 참고)

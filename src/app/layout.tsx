@@ -5,6 +5,8 @@
   페이지가 바뀌어도 layout은 다시 렌더링되지 않아요. 이게 Pages Router랑 결정적으로 다른 점이에요.
 */
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Home } from 'lucide-react';
 import './global.css';
 import QueryProvider from "@/providers/QueryProvider";
 import { Geist } from "next/font/google";
@@ -28,6 +30,14 @@ export default function RootLayout({
   return (
     <html lang="ko" className={cn("font-sans", geist.variable)}>
       <body>
+        <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 h-24 bg-gradient-to-t from-background to-transparent" />
+        <Link
+          href="/"
+          className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-base text-muted-foreground shadow-sm transition-colors hover:border-primary hover:text-primary"
+        >
+          <Home className="size-5" />
+          홈으로
+        </Link>
         <QueryProvider>
           {children}
         </QueryProvider>

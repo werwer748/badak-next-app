@@ -80,8 +80,13 @@
 
 ## 6. 디자인 라이트 터치
 
-- [ ] `about`, `docs`, `login`, `blog` 목록 등 텍스트만 있는 페이지 여백/타이포/카드 정리
-- [ ] 구조적 학습 포인트(레이아웃 분리, parallel/intercepting routes 등)는 변경하지 않음
+- [x] 전역 "홈으로" 버튼 추가 — `src/app/layout.tsx`에 고정 배치, 데모/노션 페이지에서 뒤로가기 없이 랜딩으로 복귀 가능 (`DESIGN.md` "전역 네비게이션 요소" 참고)
+- [x] `about`, `docs`, `login`, `blog` 목록 등 텍스트만 있는 페이지 여백/타이포/카드 정리
+  - `about`: 바깥 래퍼에 `p-8` 패딩 추가, `text-gray-600` → `text-muted-foreground` 토큰 교체
+  - `docs`: slug 배열/현재 경로/depth 3줄을 각각 `<p>`로 나열하던 것 → 카드(`border-border`/`bg-card`) 하나로 묶음, 토큰 교체
+  - `login`: `text-gray-600` → `text-muted-foreground` 토큰 교체
+  - `blog` 목록: 포스트 링크를 밑줄 텍스트 → 카드(`border-border`/`bg-card`, hover 시 `border-primary`)로 교체, `text-blue-500` → 토큰 교체
+- [x] 구조적 학습 포인트(레이아웃 분리, parallel/intercepting routes, catch-all params, notFound()/generateMetadata, proxy 인증 데모)는 변경하지 않음 — 클래스명/JSX 래핑만 수정
 
 ## 7. 문서 동기화
 

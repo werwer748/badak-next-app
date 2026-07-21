@@ -18,15 +18,15 @@ export default function BlogPage() {
     <main className="p-8">
       <h1 className="text-3xl font-bold mb-6">블로그</h1>
       <StudyNote id="blog-list" />
-      <Link href="/state-demo" className="text-blue-500 hover:underline mb-6 block">
+      <Link href="/state-demo" className="mb-6 block text-muted-foreground hover:text-primary hover:underline">
         ← 상태관리 데모로 돌아가기
       </Link>
-      <ul className="space-y-4">
+      <ul className="space-y-3">
         {posts.map((post) => (
           <li key={post.slug}>
             <Link
               href={`/blog/${post.slug}`}
-              className="text-blue-500 hover:underline text-lg"
+              className="block rounded-xl border border-border bg-card p-4 font-bold transition-colors hover:border-primary hover:text-primary"
             >
               {post.title}
             </Link>

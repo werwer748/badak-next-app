@@ -1,4 +1,5 @@
 import {
+  Hammer,
   Route,
   FolderTree,
   Braces,
@@ -17,6 +18,7 @@ import {
 import type { StudyCategory } from '@/data/study-routes'
 
 export const categoryIcons: Record<StudyCategory, LucideIcon> = {
+  '기초 공사': Hammer,
   '라우팅 기초': Route,
   'Route Group': FolderTree,
   '동적 라우팅': Braces,

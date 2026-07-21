@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import SlowComponent1 from './_components/SlowComponent1'
 import SlowComponent2 from './_components/SlowComponent2'
 import SlowComponent3 from './_components/SlowComponent3'
+import { StudyNote } from '@/components/StudyNote'
 
 function LoadingSkeleton() {
   return (
@@ -16,6 +17,7 @@ export default function StreamingPage() {
   return (
     <main className="p-8 space-y-4">
       <h1 className="text-3xl font-bold mb-6">Streaming 테스트</h1>
+      <StudyNote id="streaming" />
       <Suspense fallback={<LoadingSkeleton />}>
         <SlowComponent1 />
       </Suspense>

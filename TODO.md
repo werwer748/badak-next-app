@@ -65,18 +65,18 @@
   - [x] `테스트` (testing) — Jest 노션 페이지, Jest/RTL 역할 구분·renderHook·jest.mock 반영
   - [x] `설정` (config-and-proxy) — Proxy/폴더구조 노션 페이지, proxy가 할 수 있는 일/없는 일 반영
 - [x] `notion` linkType 항목들의 `href`를 실제 노션 페이지 URL로 교체 (API Routes 3개 + 테스트 + 설정, 총 5개 항목 전부 완료)
-- [ ] `src/components/StudyNote.tsx` 공용 컴포넌트 작성 (`study-routes.ts` 데이터 참조해서 렌더링)
-- [ ] 아래 페이지 상단에 배너 삽입
-  - [ ] `/counter`
-  - [ ] `(marketing)/about`
-  - [ ] `(dashboard)/dashboard`
-  - [ ] `/blog`, `/blog/[slug]`
-  - [ ] `/docs/[[...slug]]`
-  - [ ] `/photos`, `/photos/[id]`
-  - [ ] `/streaming`
-  - [ ] `/server-actions-demo`
-  - [ ] `/state-demo`
-  - [ ] `/login`
+- [x] `src/components/StudyNote.tsx` 공용 컴포넌트 작성 (`study-routes.ts` 데이터 참조해서 렌더링, id로 조회 안 되면 에러 throw) + `StudyNote.test.tsx` co-locate
+- [x] 아래 페이지 상단에 배너 삽입
+  - [x] `/counter`
+  - [x] `(marketing)/about`
+  - [x] `(dashboard)/dashboard`
+  - [x] `/blog`, `/blog/[slug]`
+  - [x] `/docs/[[...slug]]`
+  - [x] `/photos`, `/photos/[id]` (둘 다 같은 `photos` 노트 공유)
+  - [x] `/streaming`
+  - [x] `/server-actions-demo`
+  - [x] `/state-demo`
+  - [x] `/login`
 
 ## 6. 디자인 라이트 터치
 

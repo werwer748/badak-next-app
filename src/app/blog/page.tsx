@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { StudyNote } from '@/components/StudyNote'
 
 export const metadata: Metadata = {
   title: '블로그',
@@ -16,6 +17,7 @@ export default function BlogPage() {
   return (
     <main className="p-8">
       <h1 className="text-3xl font-bold mb-6">블로그</h1>
+      <StudyNote id="blog-list" />
       <Link href="/state-demo" className="text-blue-500 hover:underline mb-6 block">
         ← 상태관리 데모로 돌아가기
       </Link>

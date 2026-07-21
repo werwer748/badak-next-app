@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { StudyNote } from '@/components/StudyNote'
 
 const photos = [
   { id: '1', title: '첫 번째 사진', description: '아름다운 풍경' },
@@ -10,6 +11,7 @@ export default function PhotosPage() {
   return (
     <main className="p-8">
       <h1 className="text-3xl font-bold mb-6">사진 목록</h1>
+      <StudyNote id="photos" />
       <div className="grid grid-cols-3 gap-4">
         {photos.map((photo) => (
           <Link

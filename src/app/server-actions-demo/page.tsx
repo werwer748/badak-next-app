@@ -1,6 +1,7 @@
 import { getPosts } from '@/app/actions/posts'
 import PostForm from './_components/PostForm'
 import DeleteButton from './_components/DeleteButton'
+import { StudyNote } from '@/components/StudyNote'
 
 export default async function ServerActionsDemoPage() {
   const posts = await getPosts()
@@ -8,6 +9,7 @@ export default async function ServerActionsDemoPage() {
   return (
     <main className="p-8 max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Server Actions 데모</h1>
+      <StudyNote id="server-actions-demo" />
       <PostForm />
       <div className="mt-8">
         <h2 className="text-xl font-bold mb-4">포스트 목록</h2>

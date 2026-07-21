@@ -5,6 +5,7 @@ import Modal from "@/app/state-demo/_component/Modal";
 import PostForm   from "@/app/state-demo/_component/PostForm";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { StudyNote } from '@/components/StudyNote'
 
 type TPost = {
   id: number
@@ -29,6 +30,7 @@ export default async function StateDemoPage() {
       <p className="text-gray-600 mb-6">
         Zustand + TanStack Query 조합이에요.
       </p>
+      <StudyNote id="state-demo" />
       <Badge variant="success">신선한 데이터</Badge>
       <Badge variant="warning">업데이트 중</Badge>
       <Badge variant="danger">에러</Badge>

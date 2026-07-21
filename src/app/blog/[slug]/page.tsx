@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { StudyNote } from '@/components/StudyNote'
 
 const posts = [
   { slug: 'hello-world', title: '첫 번째 포스트', description: '안녕하세요!' },
@@ -82,7 +83,8 @@ export default async function BlogPostPage({ params, searchParams }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <h1 className="text-3xl font-bold mb-4">{post?.title}</h1>
-      <p className="text-gray-600">{post?.description}</p>
+      <p className="mb-6 text-gray-600">{post?.description}</p>
+      <StudyNote id="blog-slug" />
       <a href="/blog" className="text-blue-500 hover:underline mt-4 block">
         ← 목록으로
       </a>

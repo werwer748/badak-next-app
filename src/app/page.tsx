@@ -2,6 +2,7 @@ import { studyRoutes, type StudyCategory } from '@/data/study-routes'
 import { StudyRouteCard } from '@/components/StudyRouteCard'
 
 const CATEGORY_ORDER: StudyCategory[] = [
+  '기초 공사',
   '라우팅 기초',
   'Route Group',
   '동적 라우팅',

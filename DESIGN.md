@@ -58,6 +58,7 @@
 
 | 카테고리 | 아이콘 |
 |---------|--------|
+| 기초 공사 | `Hammer` |
 | 라우팅 기초 | `Route` |
 | Route Group | `FolderTree` |
 | 동적 라우팅 | `Braces` |

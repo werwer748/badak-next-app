@@ -48,9 +48,23 @@
 > 사용자가 실제로 학습하면서 노션에 기록해둔 내용을 다듬어서 반영. `study-routes.ts`의 `linkType: 'notion'`
 > 항목들(API Routes, 테스트, 설정)의 `href: '#'` placeholder도 이때 실제 노션 URL로 교체.
 
-- [ ] 노션 연결 확인 후, 각 카테고리별 사용자의 실제 노션 기록 내용 확인
-- [ ] `study-routes.ts`의 `description`/`whatIsIt`/`whereUsed`/`concepts`를 노션 기록 기반으로 다듬기 (일반론 → 실제 학습 과정/삽질 경험 반영)
-- [ ] `notion` linkType 항목들의 `href`를 실제 노션 페이지 URL로 교체
+- [x] 노션 연결 확인 후, 각 카테고리별 사용자의 실제 노션 기록 내용 확인
+- [x] `study-routes.ts`의 `description`/`whatIsIt`/`whereUsed`/`concepts`를 노션 기록 기반으로 다듬기 (일반론 → 실제 학습 과정/삽질 경험 반영) — 노션 Phase 순서대로 전체 완료
+  - [x] `기초 공사` 카테고리 신규 추가 (Phase1 렌더링 원리/Hydration, Phase2 package.json/폴더구조/기본화면+Tailwind — 데모 라우트가 없어 노션 카드 5개로 구성). `StudyCategory` 타입, `category-icons.tsx`(`Hammer` 아이콘), `page.tsx`의 `CATEGORY_ORDER`, `DESIGN.md` 아이콘 표도 함께 갱신
+  - [x] `라우팅 기초` (Counter) — Component 노션 페이지의 실제 Hydration 불일치 삽질 경험 반영
+  - [x] `Route Group` (about) — "라우팅 방식" 노션 페이지 반영
+  - [x] `동적 라우팅` (blog-list, blog-slug, docs-catchall) — 같은 노션 페이지, params Promise/catch-all 단계별 차이 반영
+  - [x] `Parallel & Intercepting Routes` (dashboard, photos) — 같은 노션 페이지, Suspense vs loading.tsx 실험 결과 + 세그먼트 기준 인터셉트 원리 반영
+  - [x] `Streaming` — 같은 노션 페이지, CSR/SSR 흰화면 한계 → Suspense로 해결하는 흐름 반영
+  - [x] `Server Actions` — Route Handler 대비 왕복 횟수/RSC 페이로드 비교 반영
+  - [x] `상태관리` — Zustand + TanStack Query 노션 페이지, QueryProvider 분리 이유/Optimistic Update 등 반영
+  - [x] `인증` (login, auth-guard-trigger) — Proxy 노션 페이지, middleware→proxy 개명/Edge Runtime 제약/matcher 정규식 반영
+  - [x] `에러 처리` (error-boundary-trigger, not-found-trigger) — error 페이지 노션, Client/Server Component 구분·버블링 순서 반영
+  - [x] `API Routes` (api-posts, api-posts-id, api-webhook) — Route Handlers/캐시? 노션 페이지 반영
+  - [x] `SEO` (robots, sitemap) — 크롤 버짓, robots.txt는 보안 수단 아님, sitemap 5만 개 제한 반영
+  - [x] `테스트` (testing) — Jest 노션 페이지, Jest/RTL 역할 구분·renderHook·jest.mock 반영
+  - [x] `설정` (config-and-proxy) — Proxy/폴더구조 노션 페이지, proxy가 할 수 있는 일/없는 일 반영
+- [x] `notion` linkType 항목들의 `href`를 실제 노션 페이지 URL로 교체 (API Routes 3개 + 테스트 + 설정, 총 5개 항목 전부 완료)
 - [ ] `src/components/StudyNote.tsx` 공용 컴포넌트 작성 (`study-routes.ts` 데이터 참조해서 렌더링)
 - [ ] 아래 페이지 상단에 배너 삽입
   - [ ] `/counter`

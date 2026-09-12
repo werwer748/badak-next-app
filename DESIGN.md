@@ -82,7 +82,10 @@
 ## 전역 네비게이션 요소
 
 - `src/app/layout.tsx`에 "홈으로" 버튼을 고정 배치 — 카드 클릭 후 데모/노션 페이지로 이동하면 브라우저 뒤로가기 말고는 랜딩으로 돌아올 방법이 없어서 추가
-- 화면 하단 중앙 고정(`fixed bottom-6 left-1/2 -translate-x-1/2`), 아이콘(`Home`, size-5) + 텍스트(`text-base`), `Badge`와 톤을 맞춘 pill 버튼(`border-border`/`bg-card`/`text-muted-foreground`, hover 시 `border-primary`/`text-primary`)
+- 그 옆에 인증 토글 버튼(`src/components/AuthToggle.tsx`)을 하나 더 둠 — `auth-token` 쿠키를 미리 심거나 지워서 인증 가드 플로우를 눌러볼 수 있게 하는 데모용 스위치. 라벨/아이콘은 현재 쿠키 상태에 따라 "로그인 처리"(`LogIn`) ↔ "로그아웃 처리"(`LogOut`)로 바뀜
+- 두 버튼은 `fixed bottom-6 left-1/2 -translate-x-1/2` flex 컨테이너(`gap-2`) 안에 나란히 배치. pill 스타일은 `layout.tsx`의 `navPillClass` 상수 하나를 둘이 공유하고, `AuthToggle`은 `className` prop으로 받아 씀 (스타일 정의가 두 군데로 갈라지지 않게)
+- pill 사양: 아이콘(size-5) + 텍스트(`text-base`), `Badge`와 톤을 맞춤(`border-border`/`bg-card`/`text-muted-foreground`, hover 시 `border-primary`/`text-primary`)
+- 인증 토글은 마운트 전(쿠키를 아직 못 읽은 시점)에는 `invisible`로 자리만 잡음 — 라벨이 "로그인 처리" → "로그아웃 처리"로 깜빡이는 걸 막으면서 레이아웃은 흔들리지 않게
 - `z-40` — `/photos` 인터셉트 모달(`z-50`)보다 낮게 둬서 모달이 열려 있을 때는 자연스럽게 가려지도록 함
 - 버튼이 콘텐츠를 가리는 문제는 레이아웃에 패딩을 넣는 대신(일부 페이지가 `min-h-screen` + 중앙 정렬을 쓰고 있어 스크롤/정렬이 깨질 위험) `bottom-0` 고정 그라디언트 스크림(`h-24 bg-gradient-to-t from-background to-transparent`, `pointer-events-none`, `z-30`)으로 해결 — 레이아웃에는 전혀 영향 없이 시각적으로만 자연스럽게 페이드
 

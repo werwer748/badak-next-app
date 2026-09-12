@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { AUTH_COOKIE_NAME, isProtectedPath } from "@/lib/auth";
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -9,15 +10,16 @@ export function proxy(request: NextRequest) {
   console.log(`[proxy] ${request.method} ${pathname}`);
   
   //2. 인증 체크
-  const token = request.cookies.get('auth-token')?.value;
-  console.log('????:', token);
-  const protectedPaths = ['/dashboard'];
-  const isProtected = protectedPaths.some((path) => {
-    return pathname.startsWith(path);
-  });
+  const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
   
-  if (isProtected && !token) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  if (isProtectedPath(pathname) && !token) {
+    /*
+      원래 가려던 경로를 ?redirect= 로 남겨둬야
+      로그인 후 그 경로로 다시 돌려보낼 수 있어요.
+    */
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
   }
   
   // 3. 보안 헤더 추가?

@@ -14,7 +14,7 @@
 src/
   app/
     page.tsx                  # 가이드 랜딩 페이지
-    layout.tsx                # 루트 layout (QueryProvider + 전역 "홈으로" 버튼)
+    layout.tsx                # 루트 layout (QueryProvider + 전역 "홈으로"·인증 토글 버튼)
     error.tsx / global-error.tsx / not-found.tsx
     counter/
       _components/
@@ -38,6 +38,8 @@ src/
     server-actions-demo/
     state-demo/
     login/
+      _components/
+        LoginButton.tsx       # 로그인 처리(쿠키 발급) 버튼
     actions/
     api/
       posts/
@@ -49,10 +51,12 @@ src/
   components/
     StudyRouteCard.tsx        # 랜딩 카드
     StudyNote.tsx             # 데모 페이지 상단 설명 배너
+    AuthToggle.tsx            # 전역 로그인/로그아웃 토글 버튼
     ui/
   data/
     study-routes.ts           # 라우트 설명 단일 진실 공급원
   lib/
+    auth.ts                   # 쿠키 이름·보호 경로 등 인증 상수/순수 함수
     category-icons.tsx
     utils.ts
   providers/
@@ -193,9 +197,14 @@ src/
 ## 🔑 로그인
 
 ### `/login`
-- **경로** `src/app/login/page.tsx`
-- **학습 목적** proxy.ts 인증 체크 테스트용
-- **핵심 개념** 토큰 없이 `/dashboard` 접근 시 리다이렉트 목적지
+- **경로** `src/app/login/page.tsx`, `src/app/login/_components/LoginButton.tsx`
+- **학습 목적** proxy.ts 인증 체크 테스트용 + Server Action으로 쿠키 쓰기
+- **핵심 개념**
+  - 토큰 없이 `/dashboard` 접근 시 리다이렉트 목적지
+  - "로그인 처리" 버튼 → Server Action(`src/app/actions/auth.ts`)에서 `cookies().set()`으로 `auth-token` 발급.
+    쿠키 쓰기는 렌더링 중에는 못 하고 Server Action / Route Handler에서만 가능
+  - proxy가 붙여준 `?redirect=` 로 원래 가려던 경로에 복귀 (`searchParams`를 쓰므로 이 페이지만 동적 렌더링)
+  - 복귀 경로는 `safeRedirectTarget()`으로 검증 — `//evil.com` 같은 프로토콜 상대 URL을 막아야 오픈 리다이렉트가 안 생김
 
 ---
 
@@ -244,6 +253,8 @@ src/
 | `src/store/useModalStore.test.ts` | `useModalStore.ts` | Zustand 스토어 단독 로직 (open/close 상태 변화) |
 | `src/app/state-demo/_component/PostList.test.tsx` | `PostList.tsx` | TanStack Query 붙은 컴포넌트 렌더링/동작 |
 | `src/components/StudyNote.test.tsx` | `StudyNote.tsx` | `study-routes.ts` 데이터 기반 렌더링, 없는 id면 throw |
+| `src/lib/auth.test.ts` | `auth.ts` | 보호 경로 판별, 쿠키 유무 판별(부분일치 오탐 방지), 복귀 경로 검증(오픈 리다이렉트 차단) |
+| `src/components/AuthToggle.test.tsx` | `AuthToggle.tsx` | 쿠키 상태에 따른 라벨 전환, 현재 경로 전달, 클릭 시 Server Action 호출 |
 
 ---
 
@@ -268,7 +279,11 @@ src/
   - 인증 체크 (쿠키 없으면 `/login` 리다이렉트)
   - 보안 헤더 추가 (`X-Frame-Options`, `X-Content-Type-Options`)
   - `matcher` 로 정적 파일 제외
-  - Link 이동 시 proxy 실행 안 됨 → layout에서 2차 체크 필요
+  - 리다이렉트할 때 `?redirect=<원래경로>` 를 붙여야 로그인 후 복귀가 가능
+  - **App Router에서는 Link 이동도 proxy를 통과함** — 클라이언트 네비게이션이 RSC 요청(`RSC: 1` 헤더)을
+    서버로 보내기 때문. 랜딩의 "인증 가드 체험하기" 카드(`<Link>`)를 눌러도 `/login?redirect=%2Fdashboard`로
+    리다이렉트되는 걸 서버 로그(`[proxy] GET /dashboard` → `[proxy] GET /login`)로 확인함
+  - 그래도 proxy 단일 방어선에 의존하지 말고 layout/page에서 2차 체크를 두는 편이 안전
 
 ---
 
@@ -276,12 +291,15 @@ src/
 
 | 파일 | 역할 |
 |------|------|
-| `src/app/layout.tsx` | 전체 앱 루트 layout. QueryProvider로 감싸고, 전역 "홈으로" 버튼 + 하단 그라디언트 스크림을 고정 배치 |
+| `src/app/layout.tsx` | 전체 앱 루트 layout. QueryProvider로 감싸고, 전역 "홈으로" + 인증 토글 버튼 + 하단 그라디언트 스크림을 고정 배치 |
 | `src/app/global.css` | Tailwind CSS 진입점 (`@import "tailwindcss"` + `@theme inline` 토큰) |
 | `src/lib/utils.ts` | `cn()` 함수 (clsx + tailwind-merge) |
 | `src/store/useModalStore.ts` | Zustand 모달 전역 상태 |
 | `src/providers/QueryProvider.tsx` | TanStack Query 클라이언트 설정 |
 | `src/app/actions/posts.ts` | Server Actions 모음 |
+| `src/app/actions/auth.ts` | 로그인/로그아웃 Server Actions (`cookies().set` / `.delete`) |
+| `src/lib/auth.ts` | 쿠키 이름·보호 경로·복귀 경로 검증 — proxy·Server Action·클라이언트가 공유 |
+| `src/components/AuthToggle.tsx` | 전역 로그인/로그아웃 토글 버튼 |
 | `src/components/ui/Button.tsx` | shadcn/ui Button |
 | `src/components/ui/Badge.tsx` | cva로 직접 만든 Badge |
 | `src/data/study-routes.ts` | 라우트 설명 단일 진실 공급원 (랜딩 카드 + StudyNote 배너가 공유) |

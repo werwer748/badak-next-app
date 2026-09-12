@@ -330,11 +330,16 @@ export const studyRoutes: StudyRoute[] = [
     id: 'login',
     title: '로그인 페이지',
     category: '인증',
-    description: 'proxy.ts 인증 체크 테스트용',
+    description: 'proxy.ts 인증 체크 테스트용 — 로그인 처리 버튼으로 쿠키 발급',
     whatIsIt:
       "Next.js 16에서 middleware.ts 파일 컨벤션이 deprecated되고 proxy.ts로 이름이 바뀌었어요. proxy.ts는 요청이 page.tsx에 도달하기 전에 가장 먼저 실행되는데, 보호된 경로 접근 시 인증 여부를 검사하고 토큰이 없으면 이 페이지로 리다이렉트해요.",
     whereUsed: '실무의 인증 가드, 로그인 리다이렉트 플로우와 동일한 패턴이에요.',
-    concepts: ['토큰 없이 /dashboard 접근 시 리다이렉트 목적지'],
+    concepts: [
+      '토큰 없이 /dashboard 접근 시 리다이렉트 목적지',
+      '로그인 처리 버튼 — Server Action에서 cookies().set()으로 auth-token을 심어요. 쿠키 쓰기는 렌더링 중에는 못 하고 Server Action/Route Handler에서만 가능해요',
+      'proxy가 붙여준 ?redirect= 파라미터로 원래 가려던 경로에 복귀 — 오픈 리다이렉트를 막으려고 /로 시작하고 //로 시작하지 않는 내부 경로만 허용해요',
+      '실무라면 토큰 쿠키는 httpOnly: true로 막지만, 여기서는 하단 전역 토글이 document.cookie로 상태를 읽어야 해서 일부러 false로 뒀어요 (root layout에서 cookies()를 읽으면 모든 페이지가 동적 렌더링으로 바뀌어서 피한 선택)',
+    ],
     linkType: 'demo',
     href: '/login',
   },
@@ -349,7 +354,8 @@ export const studyRoutes: StudyRoute[] = [
     concepts: [
       '쿠키 없으면 /login 리다이렉트',
       "matcher의 부정 전방탐색 정규식 — '_next/static·_next/image·favicon.ico·public로 시작하지 않는 경로만' proxy 실행 (정적 파일 제외로 불필요한 실행 방지)",
-      'Link로 이동하면 클라이언트 사이드 네비게이션이라 서버에 요청이 안 가서 proxy가 실행되지 않음 — proxy는 URL 직접 접근/새로고침/API 요청만 처리, layout.tsx는 Link 이동 포함 모든 경우를 처리',
+      'App Router에서는 Link 이동도 proxy를 통과함 — 클라이언트 네비게이션이 RSC 요청(RSC: 1 헤더)을 서버로 보내기 때문에, URL 직접 접근·새로고침과 똑같이 가드가 걸림 (랜딩의 이 카드를 눌러보면 확인 가능)',
+      '그래도 proxy 하나만 믿지 않고 layout/page에서 2차 체크를 두는 게 안전함 — proxy는 우회 가능성이 있는 단일 방어선이라 Next.js 공식 문서도 다층 방어를 권장',
     ],
     linkType: 'trigger',
     href: '/dashboard',

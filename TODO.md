@@ -115,3 +115,26 @@
   - 선행 조치: 이 머신(arm64)에 `@next/swc-darwin-x64`만 설치돼 있어 SWC 바인딩 로드 실패로
     테스트가 아예 실행되지 않던 문제를 `pnpm install`로 해결
 - [x] `npm run build` 통과 확인 (배포 가능 상태)
+
+## 9. 로그인 처리 데모 & 인증 가드 복귀
+
+> 문제: proxy가 `/dashboard` → `/login`으로 튕기는데 정작 앱 안에 `auth-token` 쿠키를 발급할 방법이 없어서
+> DevTools로 쿠키를 직접 주입해야만 가드 통과 이후를 볼 수 있었음(8단계 검증 기록 참고).
+> 게다가 원래 가려던 경로를 안 남겨서 "로그인 후 하려던 동작이 이어지는지"를 확인할 수 없었음.
+
+- [x] `src/lib/auth.ts` 신설 — 쿠키 이름/보호 경로/복귀 경로 검증을 proxy·Server Action·클라이언트가 공유
+- [x] `src/app/actions/auth.ts` 신설 — `login` / `toggleAuth` Server Action (`cookies().set` / `.delete`)
+- [x] `src/proxy.ts` — 리다이렉트에 `?redirect=<원래경로>` 보존, 공유 상수 사용, 디버그 로그 `console.log('????')` 제거
+- [x] `/login` 에 "로그인 처리" 버튼 추가 (`_components/LoginButton.tsx`, `useActionState`)
+- [x] 전역 "홈으로" 버튼 옆에 인증 토글 추가 (`src/components/AuthToggle.tsx`)
+  - root layout에서 `cookies()`를 읽으면 전 페이지가 동적 렌더링이 되므로, 쓰기는 Server Action / 읽기는 `document.cookie`로 분리
+- [x] 테스트 co-locate — `src/lib/auth.test.ts`, `src/components/AuthToggle.test.tsx`
+- [x] 문서 갱신 — `STUDY_PAGES.md`, `DESIGN.md`, `src/data/study-routes.ts`
+  - 덤으로 "Link 이동 시 proxy 실행 안 됨"이라는 잘못된 서술을 수정 (App Router에서는 Link 이동도 RSC 요청이라 proxy를 통과함 — 실제 동작으로 확인)
+- [x] 검증
+  - `npm test` 6 suites / 24 tests 통과
+  - `npm run build` 통과 — `/login`만 ƒ(Dynamic)으로 바뀌고 나머지는 ○(Static) 유지
+  - 수동 플로우: `/dashboard` → `/login?redirect=%2Fdashboard` → "로그인 처리" → `/dashboard` 복귀,
+    대시보드에서 "로그아웃 처리" → 다시 `/login?redirect=%2Fdashboard`,
+    랜딩의 "인증 가드 체험하기" 카드(`<Link>`)로도 동일하게 리다이렉트되는 것 확인
+- [ ] Vercel 배포

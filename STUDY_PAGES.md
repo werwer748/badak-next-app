@@ -2,54 +2,96 @@
 
 > `create-next-app` 없이 직접 구성한 Next.js 16 프로젝트
 > 각 페이지가 어떤 개념을 학습하기 위해 만들어졌는지 정리합니다.
+>
+> 루트(`/`)는 이 내용을 화면으로 보여주는 **가이드 랜딩 페이지**이고,
+> 카드/배너에 들어가는 설명 텍스트는 전부 `src/data/study-routes.ts` 한 곳에서 옵니다.
 
 ---
 
 ## 📁 전체 폴더 구조
 
 ```
-src/app/
-  (marketing)/
-    about/
-  (dashboard)/
-    dashboard/
-  blog/
-    [slug]/
-  docs/
-    [[...slug]]/
-  photos/
-    [id]/
-    @modal/
-      (..)photos/
-        [id]/
-  streaming/
-  server-actions-demo/
-  state-demo/
-  login/
-  api/
-    posts/
+src/
+  app/
+    page.tsx                  # 가이드 랜딩 페이지
+    layout.tsx                # 루트 layout (QueryProvider + 전역 "홈으로" 버튼)
+    error.tsx / global-error.tsx / not-found.tsx
+    counter/
+      _components/
+        Counter.tsx
+    (marketing)/
+      about/
+    (dashboard)/
+      dashboard/
+        @analytics/
+        @orders/
+    blog/
+      [slug]/
+    docs/
+      [[...slug]]/
+    photos/
       [id]/
-    webhook/
-      payment/
-  robots.ts
-  sitemap.ts
-  _components/
-    Counter.tsx
+      @modal/
+        (..)photos/
+          [id]/
+    streaming/
+    server-actions-demo/
+    state-demo/
+    login/
+    actions/
+    api/
+      posts/
+        [id]/
+      webhook/
+        payment/
+    robots.ts
+    sitemap.ts
+  components/
+    StudyRouteCard.tsx        # 랜딩 카드
+    StudyNote.tsx             # 데모 페이지 상단 설명 배너
+    ui/
+  data/
+    study-routes.ts           # 라우트 설명 단일 진실 공급원
+  lib/
+    category-icons.tsx
+    utils.ts
+  providers/
+  store/
+  proxy.ts
 ```
 
 ---
 
-## 🏠 루트 페이지
+## 🏠 루트 페이지 (가이드 랜딩)
 
 ### `/`
 - **경로** `src/app/page.tsx`
-- **학습 목적** Server Component 기본 구조 이해
-- **핵심 개념** `page.tsx` 가 곧 라우트, Server Component 기본값, 소스 보기에서 HTML 확인
+- **학습 목적** 원래는 Server Component 기본 구조 확인용 페이지였는데, 쇼케이스화 작업에서 "어떤 라우트가 어떤 개념을 학습한 건지" 한눈에 보여주는 **가이드 랜딩**으로 교체했어요
+- **핵심 개념**
+  - `studyRoutes` 배열을 `CATEGORY_ORDER` 순서로 훑어서 카테고리별 섹션 + 카드 그리드를 렌더링
+  - 히어로 아래 앵커 네비 — 카테고리명을 slug로 바꿔 `#해시`로 점프 (`scroll-mt-8` 로 상단 잘림 방지)
+  - 여전히 Server Component 기본값 (`'use client'` 없음). 데이터가 정적 배열이라 클라이언트 JS 없이 그려짐
 
-### Counter (테스트용 컴포넌트)
-- **경로** `src/app/_components/Counter.tsx`
+### 랜딩을 구성하는 파일들
+| 파일 | 역할 |
+|------|------|
+| `src/data/study-routes.ts` | **단일 진실 공급원**. 라우트별 `title` / `category` / `description`(학습 목적) / `whatIsIt` / `whereUsed` / `concepts` / `linkType` / `href` 를 배열 하나에 모아둠 |
+| `src/components/StudyRouteCard.tsx` | 랜딩 카드 한 장. `linkType` 에 따라 배지 문구("데모 보기" / "체험하기" / "노션에서 보기 ↗")와 링크 방식이 갈림 — 노션은 `<a target="_blank">`, `robots.txt` / `sitemap.xml` 처럼 페이지가 아니라 파일 응답인 것도 `next/link` 대신 일반 `<a>` |
+| `src/components/StudyNote.tsx` | 각 데모 페이지 상단에 붙는 설명 배너. 같은 배열을 `id` 로 조회해 `whatIsIt` / `whereUsed` / `concepts` 를 렌더링하고, 없는 id면 에러를 throw 해서 오타를 바로 잡아줌 |
+| `src/lib/category-icons.tsx` | `StudyCategory` → lucide 아이콘 매핑. `Record<StudyCategory, LucideIcon>` 타입이라 카테고리를 추가하면 누락이 타입 에러로 잡힘 |
+
+> `linkType: 'notion'` 항목(기초 공사 5개, API Routes 3개, 테스트, 설정)은 화면으로 보여줄 게
+> 없는 주제라 데모 대신 노션 정리 페이지로 연결돼요.
+
+---
+
+## 🔢 Counter (Client Component 기초)
+
+### `/counter`
+- **경로** `src/app/counter/page.tsx` (컴포넌트는 `src/app/counter/_components/Counter.tsx`)
 - **학습 목적** Client Component 기본 (`useState`, `useEffect`) + 테스트 대상
 - **핵심 개념** `'use client'` 선언, `setInterval` 로 매초 갱신되는 시각 표시, `Counter.test.tsx` 에서 렌더링/클릭 테스트
+- **참고** 원래 `src/app/_components/Counter.tsx` 로 루트 페이지에 얹혀 있었는데, 루트가 가이드 랜딩이 되면서 `/counter` 전용 라우트로 분리했어요 (테스트 파일도 같이 이동)
 
 ---
 
@@ -198,9 +240,10 @@ src/app/
 ### 테스트 대상
 | 파일 | 테스트 대상 | 검증 내용 |
 |------|------------|-----------|
-| `src/app/_components/Counter.test.tsx` | `Counter.tsx` | 초기 렌더링 값, 클릭 시 상태 증가 (`user-event`) |
+| `src/app/counter/_components/Counter.test.tsx` | `Counter.tsx` | 초기 렌더링 값, 클릭 시 상태 증가 (`user-event`) |
 | `src/store/useModalStore.test.ts` | `useModalStore.ts` | Zustand 스토어 단독 로직 (open/close 상태 변화) |
 | `src/app/state-demo/_component/PostList.test.tsx` | `PostList.tsx` | TanStack Query 붙은 컴포넌트 렌더링/동작 |
+| `src/components/StudyNote.test.tsx` | `StudyNote.tsx` | `study-routes.ts` 데이터 기반 렌더링, 없는 id면 throw |
 
 ---
 
@@ -233,16 +276,20 @@ src/app/
 
 | 파일 | 역할 |
 |------|------|
-| `src/app/layout.tsx` | 전체 앱 루트 layout, QueryProvider 감쌈 |
-| `src/app/globals.css` | Tailwind CSS 진입점 |
+| `src/app/layout.tsx` | 전체 앱 루트 layout. QueryProvider로 감싸고, 전역 "홈으로" 버튼 + 하단 그라디언트 스크림을 고정 배치 |
+| `src/app/global.css` | Tailwind CSS 진입점 (`@import "tailwindcss"` + `@theme inline` 토큰) |
 | `src/lib/utils.ts` | `cn()` 함수 (clsx + tailwind-merge) |
 | `src/store/useModalStore.ts` | Zustand 모달 전역 상태 |
 | `src/providers/QueryProvider.tsx` | TanStack Query 클라이언트 설정 |
 | `src/app/actions/posts.ts` | Server Actions 모음 |
-| `src/components/ui/button.tsx` | shadcn/ui Button |
+| `src/components/ui/Button.tsx` | shadcn/ui Button |
 | `src/components/ui/Badge.tsx` | cva로 직접 만든 Badge |
+| `src/data/study-routes.ts` | 라우트 설명 단일 진실 공급원 (랜딩 카드 + StudyNote 배너가 공유) |
+| `src/components/StudyRouteCard.tsx` | 랜딩 카드 컴포넌트 |
+| `src/components/StudyNote.tsx` | 데모 페이지 상단 설명 배너 |
+| `src/lib/category-icons.tsx` | 카테고리 → lucide 아이콘 매핑 |
 | `next.config.ts` | Next.js 설정 (`reactStrictMode: true` — 이중 렌더링으로 Hydration 불일치 검증) |
-| `proxy.ts` | 요청 인터셉터 |
+| `src/proxy.ts` | 요청 인터셉터 |
 | `jest.config.ts` / `jest.setup.ts` | Jest 설정 |
 | `postcss.config.ts` | Tailwind CSS PostCSS 설정 |
 | `src/app/robots.ts` | robots.txt 동적 생성 |

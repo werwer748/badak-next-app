@@ -47,14 +47,14 @@ describe('PostList 컴포넌트', () => {
     jest.resetAllMocks()
   })
 
-  it('fetch 중에 "백그라운드 업데이트 중..." 이 보인다', () => {
+  it('fetch 중에 "업데이트 중" 배지가 보인다', () => {
     ;(global.fetch as jest.Mock).mockImplementation(
       () => new Promise(() => {})
     )
 
     render(<PostList />, { wrapper: createWrapper() })
 
-    expect(screen.getByText('백그라운드 업데이트 중...')).toBeInTheDocument()
+    expect(screen.getByText('업데이트 중')).toBeInTheDocument()
   })
 
   it('데이터 로드 후 포스트 목록이 렌더링된다', async () => {

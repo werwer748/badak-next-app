@@ -56,3 +56,13 @@
 - 이 프로젝트는 학습/비교 목적의 의도된 실험들을 포함하고 있음 (예: `@analytics` 슬롯은 `loading.tsx`, `@orders` 슬롯은 수동 `Suspense`로 비교, Zustand `persist` 미들웨어는 실험 후 주석 처리) — 정리한답시고 이런 의도된 코드를 임의로 삭제하거나 통일하지 말 것
 - 디자인을 다듬을 때도 각 라우트의 구조적 학습 포인트(Route Group 분리, Parallel Routes, Intercepting Routes 등)는 건드리지 않고 스타일링(여백/타이포/카드 UI)만 손볼 것
 - 새 패턴을 도입하기 전에 기존 코드에 유사한 사례가 있는지 먼저 확인하고, 있다면 그 컨벤션을 따를 것
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

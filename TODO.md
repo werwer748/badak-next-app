@@ -29,7 +29,8 @@
 
 - [x] `src/app/_components/Counter.tsx` (+ 테스트) → `src/app/counter/_components/`로 이동, `src/app/counter/page.tsx` 신설
 - [x] import 경로 점검
-- [x] `npm test` 통과 확인 (PostList.test.tsx 1건은 이 작업과 무관한 기존 flaky 테스트로 확인 — 변경 전 코드에서도 동일하게 실패함)
+- [x] `npm test` 통과 확인 (PostList.test.tsx 1건은 이 작업과 무관하게 원래 실패하던 건으로 확인 — 변경 전 코드에서도 동일하게 실패함)
+  - 8단계에서 원인 규명: flaky가 아니라 **낡은 단언문**이었음. `PostList.tsx`의 로딩 표시를 `<Badge>업데이트 중</Badge>`로 바꾸면서 테스트의 `'백그라운드 업데이트 중...'` 기대값을 안 고친 것 → 8단계에서 수정 완료
 - [x] (보너스) `npm run build` 중 발견한 기존 버그 수정: `src/app/layout.tsx`의 `RootLayout` prop 타입에 실제로 없는 `modal: React.ReactNode`가 필수로 박혀있어 Next 16 typed routes 체크에서 빌드 자체가 실패하던 문제 — 타입에서 제거 (루트에는 `@modal` 슬롯이 없음, `photos/@modal`과 무관)
 - [x] `src/app/global.css`의 `--primary`/`--primary-foreground`/`--ring`/`--sidebar-primary`/`--sidebar-ring`을 DESIGN.md 스펙대로 녹색 계열로 교체
 
@@ -90,10 +91,27 @@
 
 ## 7. 문서 동기화
 
-- [ ] `STUDY_PAGES.md`에 랜딩 페이지 자체를 새 섹션/카드로 추가
-- [ ] 루트(`/`) 역할 변경 및 Counter 이동 반영
+- [x] `STUDY_PAGES.md`에 랜딩 페이지 자체를 새 섹션/카드로 추가
+  - `## 🏠 루트 페이지 (가이드 랜딩)` 으로 제목/내용 교체 + `랜딩을 구성하는 파일들` 표 신설
+    (`study-routes.ts` / `StudyRouteCard.tsx` / `StudyNote.tsx` / `category-icons.tsx`)
+- [x] 루트(`/`) 역할 변경 및 Counter 이동 반영
+  - `## 🔢 Counter (Client Component 기초)` 섹션 신설 (`/counter` + 이동 이력 메모)
+  - 폴더 구조 블록을 `src/app` 만 → `src/` 전체 실제 트리로 교체
+  - 테스트 표: `Counter.test.tsx` 경로 갱신 + `StudyNote.test.tsx` 행 추가
+  - 공통 설정 표 경로 교정: `globals.css`→`global.css`, `ui/button.tsx`→`ui/Button.tsx`,
+    `proxy.ts`→`src/proxy.ts`, 랜딩 관련 4개 파일 행 추가, `layout.tsx` 설명에 전역 "홈으로" 버튼 반영
 
 ## 8. 검증
 
-- [ ] `npm run dev` 로 전체 플로우 수동 확인 (랜딩 → 각 데모 → 뒤로가기, 에러 트리거)
-- [ ] `npm test` 전체 통과 확인
+- [x] `npm run dev` 로 전체 플로우 수동 확인 (랜딩 → 각 데모 → 뒤로가기, 에러 트리거)
+  - 랜딩 카드 그리드 + 카테고리 앵커 네비 14개 정상, 전 라우트 200
+  - `StudyNote` 배너: 데모 12개 라우트 전부 렌더링 확인
+  - 에러 트리거 `/blog/hello-world?error=true` → `blog/[slug]/error.tsx` 정상
+  - 404 트리거 `/blog/this-slug-does-not-exist` → `blog/[slug]/not-found.tsx` 정상
+  - 인증 가드: 쿠키 없이 `/dashboard` → `/login` 리다이렉트, 쿠키 주입 후 `@analytics`/`@orders` 슬롯 정상
+  - 인터셉트 라우팅: `/photos`에서 Link 클릭 → 모달, 같은 URL 직접 진입 → 전용 페이지 (의도대로 분기)
+  - 노션 카드 10개 전부 `target="_blank"`, `href: '#'` placeholder 0개
+- [x] `npm test` 전체 통과 확인 — 4 suites / 12 tests 통과
+  - 선행 조치: 이 머신(arm64)에 `@next/swc-darwin-x64`만 설치돼 있어 SWC 바인딩 로드 실패로
+    테스트가 아예 실행되지 않던 문제를 `pnpm install`로 해결
+- [x] `npm run build` 통과 확인 (배포 가능 상태)
